@@ -19,7 +19,7 @@ class RCNNSegmenter:
         self._cfg.MODEL.ROI_HEADS.SCORE_THRESH_TEST = threshold  # set threshold for this model
 
         # Use model X101-FPN-3X model from model zoo in detectron2
-        self._cfg.MODEL.WEIGHTS = "./../../pretrained_models/model_final_2d9806.pkl"
+        self._cfg.MODEL.WEIGHTS = "./../pretrained_models/model_final_2d9806.pkl"
 
         self._cfg.MODEL.DEVICE = "cpu"
 
