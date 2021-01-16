@@ -15,7 +15,6 @@ class ImageInputHandler:
     def handle_input(self):
         image = self._input_image()
 
-        # cv.imshow("Display window", image)
         self._rcnn.visualise_segmentation(image)
         _ = cv.waitKey(0)
 
