@@ -8,6 +8,24 @@ import cv2 as cv
 
 class RCNNSegmenter:
 
+    # Supported object classifications for the predictor.
+    _COCO_INSTANCE_CLASSIFICATION_NAMES = [
+        "person", "bicycle", "car", "motorcycle", "airplane", "bus", "train", "truck",
+        "boat", "traffic light", "fire hydrant", "stop sign", "parking meter", "bench",
+        "bird", "cat", "dog", "horse", "sheep", "cow", "elephant", "bear", "zebra",
+        "giraffe", "backpack", "umbrella", "handbag", "tie", "suitcase", "frisbee", "skis",
+        "snowboard", "sports ball", "kite", "baseball bat", "baseball glove", "skateboard",
+        "surfboard", "tennis racket", "bottle", "wine glass", "cup", "fork", "knife",
+        "spoon", "bowl", "banana", "apple", "sandwich", "orange", "broccoli", "carrot",
+        "hot dog", "pizza", "donut", "cake", "chair", "couch", "potted plant", "bed",
+        "dining table", "toilet", "tv", "laptop", "mouse", "remote", "keyboard",
+        "cell phone", "microwave", "oven", "toaster", "sink", "refrigerator", "book",
+        "clock", "vase", "scissors", "teddy bear", "hair drier", "toothbrush"
+    ]
+
+    # TODO: Change these arbitrary widths to be read from width of the actual default meshes used.
+    _OBJECT_WIDTH_MAPPING = {"chair": 1, "couch": 2}
+
     def __init__(self, threshold):
         self.__create_pretrained_model(threshold)
 
@@ -37,3 +55,18 @@ class RCNNSegmenter:
         out = v.draw_instance_predictions(outputs["instances"].to("cpu"))
         cv.imshow("Segmented Image Visualisation", out.get_image()[:, :, ::-1])
         _ = cv.waitKey(0)
+
+    def get_supported_classifications(self):
+        """
+        Gets a list of all the objects that can be classified by this model.
+        :return: List of all objects that can be classified.
+        """
+        return self._COCO_INSTANCE_CLASSIFICATION_NAMES
+
+    def get_object_size_mapping(self):
+        """
+        Gets a mapping of the classifiable objects and their default widths based on default
+        mesh.
+        :return: Dictionary of objects and their default widths
+        """
+        return self._OBJECT_WIDTH_MAPPING
