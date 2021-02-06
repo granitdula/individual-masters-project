@@ -25,7 +25,11 @@ class ProjectionEstimator:
         focal_length = im_width / (2 * tan(phi))
         bound_width = bound_box[2] - bound_box[0]
         class_name = self._supported_objects[class_type_index]
-        default_width = self._object_size_mapping[class_name]
+
+        if class_name in self._object_size_mapping:
+            default_width = self._object_size_mapping[class_name]
+        else:
+            return None, 0
 
         # Derivation of this is shown in the dissertation paper.
         depth = focal_length * default_width / bound_width
