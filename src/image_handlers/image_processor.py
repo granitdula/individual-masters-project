@@ -35,12 +35,13 @@ class ImageProcessor:
             class_name, depth = self._projection_estimator.estimate_depth(bounding_boxes[i],
                                                                           category_indices[i],
                                                                           image_width)
-            x_displacement = self._projection_estimator.estimate_x_displacement_from_center(
+            if class_name:
+                x_displacement = self._projection_estimator.estimate_x_displacement_from_center(
                                                                           depth, center_x,
                                                                           image_width)
 
-            instance_data = (class_name, depth, x_displacement)
-            all_instance_estimations.append(instance_data)
+                instance_data = (class_name, depth, x_displacement)
+                all_instance_estimations.append(instance_data)
 
         # TODO: Remove this once the full pipeline is implemented.
         self._rcnn.visualise_segmentation(image)
