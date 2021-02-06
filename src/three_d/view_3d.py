@@ -1,6 +1,8 @@
 from panda3d.core import loadPrcFile, DirectionalLight, PointLight
 from direct.showbase.ShowBase import ShowBase
 
+from src.three_d.room_estimator import RoomEstimator
+
 loadPrcFile("../config_3d/conf.prc")
 
 
@@ -24,9 +26,6 @@ class View3D(ShowBase):
         self._load_furniture_scene(instance_data)
 
     def _load_furniture_scene(self, instance_data):
-
-
-
         # Loads all appropriate furniture models and positions them in scene.
         for instance in instance_data:
             class_name, depth, x_displacement = instance[0], instance[1], instance[2]
@@ -48,6 +47,7 @@ class View3D(ShowBase):
         self.render.setLight(directional_light_node)
 
     def _create_room(self, instance_data):
+        room_estimator = RoomEstimator(instance_data)
         room = self.loader.load_model("../models/default_room")
         room.reparentTo(self.render)
 
@@ -57,38 +57,10 @@ class View3D(ShowBase):
         point_light_node = room.attachNewNode(point_light)
         room.setLight(point_light_node)
 
-        room_x, room_y = self._calculate_room_position(instance_data)
-        room_scale = self._calculate_room_scale(instance_data)
-        print(f"room_x = {room_x} room_y = {room_y} room_scale = {room_scale}")
+        room_x, room_y = room_estimator.calculate_room_position()
+        room_scale = room_estimator.calculate_room_scale()
+
         room.setPos(self._DISPLACEMENT_SCALE * room_x, self._DEPTH_OFFSET + room_y *\
                     self._DEPTH_SCALE, self._FLOOR_Y_VALUE)
         room.setScale(room_scale, room_scale, 1)
         point_light_node.setPos(room, 0, 0, 2)
-
-    def _calculate_room_position(self, instance_data):
-        # Tries to work out the position of the center of the room based on average position
-        # of all furniture items.
-        x, y = 0, 0
-        for instance in instance_data:
-            depth, displacement = instance[1], instance[2]
-            x += displacement
-            y += depth
-
-        x /= len(instance_data)
-        y /= len(instance_data)
-
-        return x, y
-
-    def _calculate_room_scale(self, instance_data):
-        # Tries to work out the scale of the room based on the range between the object's depths
-        # and displacements.
-        depth_arr = [instance[1] for instance in instance_data]
-        displacement_arr = [instance[2] for instance in instance_data]
-
-        min_depth, max_depth = min(depth_arr), max(depth_arr)
-        min_displacement, max_displacement = min(displacement_arr), max(displacement_arr)
-
-        width, length = max_displacement - min_displacement, max_depth - min_depth
-        scale = width if width > length else length
-
-        return scale
