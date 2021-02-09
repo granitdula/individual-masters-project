@@ -1,13 +1,19 @@
-from src.image_handlers.image_input_handler import ImageInputHandler
+import sys
+
+from PySide6.QtWidgets import QApplication
+
+from src.gui.gui_window import GUIWindow
 
 
 class Application:
 
     def __init__(self):
-        self._input_handler = ImageInputHandler()
+        self._app = QApplication(sys.argv)
+        self._gui_window = GUIWindow()
+        self._gui_window.resize(800, 600)
 
     def run(self):
-        self._input_handler.handle_input()
+        sys.exit(self._app.exec_())
 
 
 if __name__ == '__main__':
