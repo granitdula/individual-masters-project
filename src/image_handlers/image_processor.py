@@ -43,8 +43,4 @@ class ImageProcessor:
                 instance_data = (class_name, depth, x_displacement)
                 all_instance_estimations.append(instance_data)
 
-        # TODO: Remove this once the full pipeline is implemented.
-        self._rcnn.visualise_segmentation(image)
-        _ = cv.waitKey(0)
-
         return all_instance_estimations

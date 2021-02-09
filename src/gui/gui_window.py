@@ -57,4 +57,12 @@ class GUIWindow(qtw.QWidget):
 
         :return: None.
         """
-        print("CLICKED!")
+        image_filter = "Images (*.png *.xpm *.jpg)"
+        (file_name, extensions) = qtw.QFileDialog.getOpenFileName(self, "Open Image",
+                                                                  filter="Images (*.png *.xpm \
+                                                                  *.jpg)")
+
+        if not file_name:
+            return
+        if extensions == image_filter:
+            self._input_handler.handle_input(file_name)
