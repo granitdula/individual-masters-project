@@ -24,7 +24,8 @@ class RCNNSegmenter:
     ]
 
     # TODO: Change these arbitrary widths to be read from width of the actual default meshes used.
-    _OBJECT_WIDTH_MAPPING = {"chair": 1, "couch": 2}
+    _OBJECT_WIDTH_MAPPING = {"chair": 1, "couch": 2, "dining table": 2.5, "bed": 2, "oven": 1,
+                             "refrigerator": 1}
 
     def __init__(self, threshold):
         self.__create_pretrained_model(threshold)
