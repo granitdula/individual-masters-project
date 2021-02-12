@@ -1,4 +1,5 @@
-from panda3d.core import loadPrcFile, DirectionalLight, PointLight
+from panda3d.core import loadPrcFile, DirectionalLight, PointLight, GeoMipTerrain, Texture, \
+    TextureStage
 from direct.showbase.ShowBase import ShowBase
 
 from src.three_d.room_estimator import RoomEstimator
@@ -19,11 +20,39 @@ class View3D(ShowBase):
         super().__init__()
         self._instance_data = instance_data
 
-        self.set_background_color(0, 0, 0, 1)
+        self.set_background_color(0, 1, 1, 1)
         self._setup_global_lighting()
 
+        self._create_terrain()
         self._create_room(instance_data)
         self._load_furniture_scene(instance_data)
+
+    def _create_terrain(self):
+        # Set up the GeoMipTerrain.
+        # NOTE: For whatever reason there seem to be warnings on the arguments for the method
+        # calls: set_heightfield(), get_root() and generate(), because of not including an
+        # argument of type GeoMipTerrain, even though the docs say its not required. the code
+        # still works as intended though.
+        terrain = GeoMipTerrain("ground_terrain")
+        terrain.set_heightfield("../resources/images/textures/terrain_height_map.jpg")
+
+        texture = self.loader.load_texture("../resources/images/textures/envir-ground.jpg")
+        texture_scale = 128
+        texture.set_wrap_u(Texture.WM_repeat)
+        texture.set_wrap_v(Texture.WM_repeat)
+
+        root = terrain.get_root()
+        tex_stage = TextureStage.default
+        root.set_texture(tex_stage, texture)
+        root.set_tex_scale(tex_stage, texture_scale)
+        root.reparent_to(self.render)
+        root.set_pos(-500, -500, -2)
+        terrain.calcAmbientOcclusion()
+
+        terrain.generate()
+
+    def _add_trees(self):
+        pass
 
     def _load_furniture_scene(self, instance_data):
         # Loads all appropriate furniture models and positions them in scene.
