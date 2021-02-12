@@ -120,7 +120,7 @@ class View3D(ShowBase):
         for instance in instance_data:
             class_name, depth, x_displacement = instance[0], instance[1], instance[2]
 
-            furniture = self.loader.load_model(f"../models/default_{class_name}")
+            furniture = self.loader.load_model(f"../models/furniture/default_{class_name}")
             furniture.reparentTo(self.render)
 
             furniture.setPos(self._DISPLACEMENT_SCALE * x_displacement,
@@ -141,7 +141,7 @@ class View3D(ShowBase):
         # Creates a room that contains the furniture and is scaled based on the placement of
         # the furniture, so that it can all fit.
         room_estimator = RoomEstimator(instance_data)
-        room = self.loader.load_model("../models/default_room")
+        room = self.loader.load_model("../models/furniture/default_room")
         room.reparentTo(self.render)
 
         # Sets up room lighting.
