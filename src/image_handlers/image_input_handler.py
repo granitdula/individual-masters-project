@@ -26,7 +26,8 @@ class ImageInputHandler:
         self._view_3d = View3D(instance_data)
         self._view_3d.run()
 
-    def _input_image(self, file_path):
+    @staticmethod
+    def _input_image(file_path):
         # Reads the image safely with OpenCV and returns it.
         image = cv.imread(file_path)
 

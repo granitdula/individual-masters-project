@@ -28,9 +28,10 @@ class RCNNSegmenter:
                              "refrigerator": 1}
 
     def __init__(self, threshold):
-        self.__create_pretrained_model(threshold)
+        self._create_pretrained_model(threshold)
 
-    def __create_pretrained_model(self, threshold):
+    def _create_pretrained_model(self, threshold):
+        # Loads a default Mask RCNN in detectron2.
         config_path = "COCO-InstanceSegmentation/mask_rcnn_X_101_32x8d_FPN_3x.yaml"
         self._cfg = get_cfg()
 
@@ -45,10 +46,22 @@ class RCNNSegmenter:
         self._predictor = DefaultPredictor(self._cfg)
 
     def segment_image(self, image):
+        """
+        Segments the input image into unique instances recognized by the model and returns useful
+        data about the segmentation.
+
+        :param image: OpenCV image.
+        :return: Instances object from the detectron2 package.
+        """
         return self._predictor(image)
 
     def visualise_segmentation(self, image):
-        # We can use `Visualizer` to draw the predictions on the image. Used for debugging.
+        """
+        Displays the input image with its segmentations and labels shown in colour coding.
+
+        :param image: OpenCV image.
+        :return: None.
+        """
         v = Visualizer(image[:, :, ::-1], MetadataCatalog.get(self._cfg.DATASETS.TRAIN[0]), scale=1.2)
 
         outputs = self.segment_image(image)

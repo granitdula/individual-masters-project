@@ -13,6 +13,11 @@ class Application:
         self._gui_window.resize(800, 600)
 
     def run(self):
+        """
+        Runs the main application
+
+        :return: None
+        """
         sys.exit(self._app.exec_())
 
 

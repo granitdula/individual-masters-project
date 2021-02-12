@@ -24,7 +24,7 @@ class View3D(ShowBase):
         super().__init__()
         self._instance_data = instance_data
 
-        self.set_background_color(0, 1, 1, 1)
+        self.set_background_color(0, 1, 1, 1)  # RGBA
         self._setup_global_lighting()
 
         self._create_terrain()
@@ -51,8 +51,8 @@ class View3D(ShowBase):
         root.set_texture(tex_stage, texture)
         root.set_tex_scale(tex_stage, texture_scale)
         root.reparent_to(self.render)
-        root.set_pos(-500, -500, -2)
-        terrain.calcAmbientOcclusion()
+        root.set_pos(-500, -500, self._FLOOR_Y_VALUE)
+        terrain.calc_ambient_occlusion()
 
         terrain.generate()
 
@@ -86,7 +86,7 @@ class View3D(ShowBase):
         x_component = magnitude * math.sin(angle)
         y_component = direction * magnitude * math.cos(angle)
 
-        position = [center_x + x_component, center_y + y_component, -2]
+        position = [center_x + x_component, center_y + y_component, self._FLOOR_Y_VALUE]
 
         return position
 
@@ -100,7 +100,8 @@ class View3D(ShowBase):
 
         return None
 
-    def _get_all_tree_files(self):
+    @staticmethod
+    def _get_all_tree_files():
         # Get tree egg files.
         files = os.listdir("../models/trees")
         regex = re.compile(r"tree_\d\.egg")
@@ -127,31 +128,34 @@ class View3D(ShowBase):
                              self._FLOOR_Y_VALUE)
 
     def _setup_global_lighting(self):
+        # Creates a default global lighting for the entire scene.
         directional_light = DirectionalLight('directional_light')
-        directional_light.setColor((1, 1, 1, 1))
+        directional_light.set_color((1, 1, 1, 1))
 
-        directional_light_node = self.render.attachNewNode(directional_light)
-        directional_light_node.setHpr(0, -60, 0)
+        directional_light_node = self.render.attach_new_node(directional_light)
+        directional_light_node.set_hpr(0, -60, 0)
 
-        self.render.setLight(directional_light_node)
+        self.render.set_light(directional_light_node)
 
     def _create_room(self, instance_data):
+        # Creates a room that contains the furniture and is scaled based on the placement of
+        # the furniture, so that it can all fit.
         room_estimator = RoomEstimator(instance_data)
         room = self.loader.load_model("../models/default_room")
         room.reparentTo(self.render)
 
         # Sets up room lighting.
         point_light = PointLight('point_light')
-        point_light.setColor((0.5, 0.5, 0.5, 1))
-        point_light_node = room.attachNewNode(point_light)
-        room.setLight(point_light_node)
+        point_light.set_color((0.5, 0.5, 0.5, 1))
+        point_light_node = room.attach_new_node(point_light)
+        room.set_light(point_light_node)
 
         room_x, room_y = room_estimator.calculate_room_position()
         room_scale = room_estimator.calculate_room_scale()
 
-        room.setPos(self._DISPLACEMENT_SCALE * room_x, self._DEPTH_OFFSET + room_y *
+        room.set_pos(self._DISPLACEMENT_SCALE * room_x, self._DEPTH_OFFSET + room_y *
                     self._DEPTH_SCALE, self._FLOOR_Y_VALUE)
-        room.setScale(room_scale, room_scale, 1)
-        point_light_node.setPos(room, 0, 0, 2)
+        room.set_scale(room_scale, room_scale, 1)
+        point_light_node.set_pos(room, 0, 0, 2)
 
         return room
