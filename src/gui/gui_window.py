@@ -27,6 +27,7 @@ class GUIWindow(qtw.QWidget):
         self._setup_gui_widgets()
 
     def _setup_background(self):
+        # Draws the background with a custom image.
         self.background_widget = qtw.QWidget(self)
         self.background_widget.resize(self.width(), self.height())
         img_path = BASEDIR + "/../../resources/images/gui_images/background_gui.jpeg"
@@ -34,6 +35,7 @@ class GUIWindow(qtw.QWidget):
         self.background_widget.setStyleSheet(background_style)
 
     def _setup_gui_widgets(self):
+        # Places all GUI widget on the main window.
         self.heading = qtw.QLabel("Photo2Depth")
         self.heading.setStyleSheet("font-size: 64px; font-family: Helvetica; \
                                     text-align: center;")
