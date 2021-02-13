@@ -1,5 +1,3 @@
-import cv2 as cv
-
 from src.image_handlers.projection_estimator import ProjectionEstimator
 from src.image_handlers.rcnn_segmenter import RCNNSegmenter
 

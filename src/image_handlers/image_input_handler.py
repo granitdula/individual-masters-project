@@ -9,6 +9,7 @@ class ImageInputHandler:
 
     def __init__(self):
         self._image_processor = ImageProcessor()
+        self._view_3d = None  # Initialised as None before any input handling.
 
     def handle_input(self, file_path):
         """

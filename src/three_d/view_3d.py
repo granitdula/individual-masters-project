@@ -39,21 +39,23 @@ class View3D(ShowBase):
         # argument of type GeoMipTerrain, even though the docs say its not required. the code
         # still works as intended though.
         terrain = GeoMipTerrain("ground_terrain")
-        terrain.set_heightfield("../resources/images/textures/terrain_height_map.jpg")
+        terrain.setHeightfield("../resources/images/textures/terrain_height_map.jpg")
 
         texture = self.loader.load_texture("../resources/images/textures/envir-ground.jpg")
         texture_scale = 128
         texture.set_wrap_u(Texture.WM_repeat)
         texture.set_wrap_v(Texture.WM_repeat)
 
-        root = terrain.get_root()
+        root = terrain.getRoot()
         tex_stage = TextureStage.default
         root.set_texture(tex_stage, texture)
         root.set_tex_scale(tex_stage, texture_scale)
         root.reparent_to(self.render)
         root.set_pos(-500, -500, self._FLOOR_Y_VALUE)
-        terrain.calc_ambient_occlusion()
+        terrain.calcAmbientOcclusion()
 
+        # Can't seem to remove this warning and don't see why its even there when looking at
+        # the docs. All use the generate function without arguments.
         terrain.generate()
 
     def _add_trees(self, num_of_trees=40, spawn_range=100):
@@ -130,7 +132,7 @@ class View3D(ShowBase):
     def _setup_global_lighting(self):
         # Creates a default global lighting for the entire scene.
         directional_light = DirectionalLight('directional_light')
-        directional_light.set_color((1, 1, 1, 1))
+        directional_light.setColor((1, 1, 1, 1))
 
         directional_light_node = self.render.attach_new_node(directional_light)
         directional_light_node.set_hpr(0, -60, 0)
@@ -146,7 +148,7 @@ class View3D(ShowBase):
 
         # Sets up room lighting.
         point_light = PointLight('point_light')
-        point_light.set_color((0.5, 0.5, 0.5, 1))
+        point_light.setColor((0.5, 0.5, 0.5, 1))
         point_light_node = room.attach_new_node(point_light)
         room.set_light(point_light_node)
 
@@ -154,7 +156,7 @@ class View3D(ShowBase):
         room_scale = room_estimator.calculate_room_scale()
 
         room.set_pos(self._DISPLACEMENT_SCALE * room_x, self._DEPTH_OFFSET + room_y *
-                    self._DEPTH_SCALE, self._FLOOR_Y_VALUE)
+                     self._DEPTH_SCALE, self._FLOOR_Y_VALUE)
         room.set_scale(room_scale, room_scale, 1)
         point_light_node.set_pos(room, 0, 0, 2)
 
