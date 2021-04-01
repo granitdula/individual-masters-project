@@ -90,6 +90,17 @@ def test_estimate_depth_for_far_away_chair_in_a_small_image_width():
     assert (class_name == "chair" and depth == expected_depth)
 
 
+def test_return_values_for_unsupported_class_names():
+    # "person" is available in detectron2's supported classes but not for scene placement.
+    class_index = _SUPPORTED_CLASSIFICATIONS.index("person")
+    bound_box = [50, 1, 250, 251]
+    image_width = 420
+
+    class_name, depth = projection_estimator.estimate_depth(bound_box, class_index, image_width)
+
+    assert (class_name is None and depth == 0)
+
+
 def test_estimate_x_displacement_from_center_with_small_depth_and_far_left_x_pos_with_large_image():
     depth = 1
     im_width = 1400
